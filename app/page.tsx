@@ -1,136 +1,142 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Layout, Globe, Shield, BarChart3 } from "lucide-react";
+import { Sparkles, ArrowRight, Zap, Shield, Globe, Code, Layout, Rocket } from "lucide-react";
 import Link from "next/link";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 
 export default function LandingPage() {
-  const { data: session } = useSession();
-
   return (
-    <div className="relative isolate flex flex-col items-center bg-black text-white selection:bg-purple-500/30 overflow-hidden min-h-screen">
-      {/* Background Orbs */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-purple-600/20 blur-[120px] animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-600/20 blur-[120px] animate-pulse delay-700" />
-      </div>
-
-      {/* Nav */}
-      <nav className="w-full max-w-7xl px-6 py-8 flex justify-between items-center z-50">
-        <motion.div 
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="flex items-center gap-2 group cursor-pointer"
-        >
-          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
-            <Sparkles className="w-6 h-6 text-white" />
-          </div>
-          <span className="text-xl font-bold tracking-tight">VibeBuilder</span>
-        </motion.div>
-
-        <div className="flex gap-4 items-center">
-          {session ? (
-            <div className="flex items-center gap-4">
-              {session.user.role === "admin" && (
-                <Link href="/admin" className="text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors">
-                  Admin Panel
-                </Link>
-              )}
-              <Link href="/builder">
-                <motion.button 
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10 text-sm font-semibold transition-all"
-                >
-                  Dashboard
-                </motion.button>
-              </Link>
+    <div className="min-h-screen bg-[#050505] text-white selection:bg-purple-500/30 overflow-x-hidden">
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-black/50 backdrop-blur-xl">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex items-center gap-3 group cursor-pointer"
+          >
+            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
+              <Sparkles className="w-6 h-6 text-white" />
             </div>
-          ) : (
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <span className="text-xl font-bold tracking-tight">VibeBuilder</span>
+          </motion.div>
+
+          <div className="flex gap-4 items-center">
+            <button 
               onClick={() => signIn("google")}
-              className="px-6 py-2.5 rounded-full bg-white text-black text-sm font-bold shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] transition-all"
+              className="text-sm font-medium text-gray-400 hover:text-white transition-colors"
+            >
+              Sign In
+            </button>
+            <Link 
+              href="/builder"
+              className="px-6 py-2.5 rounded-full bg-white text-black text-sm font-bold hover:bg-gray-200 transition-all shadow-xl shadow-white/5"
             >
               Get Started
-            </motion.button>
-          )}
+            </Link>
+          </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <main className="flex-1 flex flex-col items-center justify-center px-6 text-center max-w-4xl pt-20 pb-32">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-medium mb-8">
-            <Sparkles className="w-3 h-3" />
-            <span>AI-Powered Website Generation is Here</span>
-          </div>
-          
-          <h1 className="text-6xl md:text-8xl font-black tracking-tight mb-8 bg-gradient-to-b from-white via-white to-white/40 bg-clip-text text-transparent leading-[1.1]">
-            Your Vision, <br />
-            <span className="text-purple-500 uppercase italic">Instantly</span> Coded.
-          </h1>
-
-          <p className="text-lg md:text-xl text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
-            Upload your logo, describe your dream site, and watch VibeBuilder generate a stunning, 
-            responsive website in seconds. All powered by Groq's lightning-fast AI.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => session ? window.location.href = "/builder" : signIn("google")}
-              className="px-8 py-4 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold flex items-center justify-center gap-2 group shadow-xl shadow-purple-600/20"
-            >
-              Start Generating for Free
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </motion.button>
-          </div>
-        </motion.div>
-
-        {/* Features Preview */}
-        <motion.div 
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          className="mt-32 grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl"
-        >
-          {[
-            { icon: Layout, title: "Stunning Layouts", desc: "Clean, modern, and highly responsive components designed by AI." },
-            { icon: Globe, title: "Live Hosting", desc: "Deploy your site instantly with its own unique link." },
-            { icon: Shield, title: "Admin Controlled", desc: "Full transparency and management features for ultimate control." }
-          ].map((feature, i) => (
-            <div key={i} className="p-8 rounded-3xl bg-white/5 border border-white/10 text-left hover:bg-white/10 hover:border-white/20 transition-all group">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center mb-6 border border-white/10 group-hover:scale-110 transition-transform">
-                <feature.icon className="w-6 h-6 text-purple-400" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">{feature.desc}</p>
+      <section className="relative pt-40 pb-20 px-6">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-purple-600/10 blur-[120px] rounded-full -z-10" />
+        
+        <div className="max-w-5xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs font-bold text-gray-400 mb-8 tracking-widest uppercase">
+              <span className="w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
+              Powered by Groq Llama-3.3
             </div>
+
+            <h1 className="text-6xl md:text-8xl font-black tracking-tight mb-8 bg-gradient-to-b from-white via-white to-white/40 bg-clip-text text-transparent leading-[1.1]">
+              Your Vision, <br />
+              <span className="text-purple-500 uppercase italic">Instantly</span> Coded.
+            </h1>
+
+            <p className="text-lg md:text-xl text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
+              Upload your logo, describe your dream site, and watch VibeBuilder generate a stunning, 
+              responsive website in seconds. All powered by Groq's lightning-fast AI.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link 
+                href="/builder"
+                className="group relative px-10 py-5 rounded-2xl bg-white text-black font-black uppercase text-sm tracking-widest overflow-hidden transition-all hover:scale-105 active:scale-95"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <span className="relative group-hover:text-white transition-colors flex items-center gap-2">
+                  Launch the Builder <ArrowRight className="w-4 h-4" />
+                </span>
+              </Link>
+              <button className="px-10 py-5 rounded-2xl bg-white/5 border border-white/10 text-white font-bold text-sm tracking-widest hover:bg-white/10 transition-all">
+                View Showcase
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Feature Grid */}
+      <section className="py-32 px-6 max-w-7xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-8">
+          {[
+            {
+              icon: <Zap className="w-6 h-6 text-yellow-400" />,
+              title: "Instant Gen",
+              desc: "Get a full website in under 5 seconds with Groq's high-speed inference."
+            },
+            {
+              icon: <Code className="w-6 h-6 text-blue-400" />,
+              title: "Clean Code",
+              desc: "Download ZIP files with production-ready Tailwind CSS and HTML structure."
+            },
+            {
+              icon: <Shield className="w-6 h-6 text-purple-400" />,
+              title: "Freemium Ready",
+              desc: "Generate 5 sites for free. Pay once to unlock unlimited creative power."
+            }
+          ].map((feature, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              viewport={{ once: true }}
+              className="p-10 rounded-[32px] bg-white/5 border border-white/10 hover:bg-white/[0.07] transition-all group"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-8 border border-white/10 group-hover:scale-110 transition-transform">
+                {feature.icon}
+              </div>
+              <h3 className="text-xl font-bold mb-4">{feature.title}</h3>
+              <p className="text-gray-500 leading-relaxed text-sm">
+                {feature.desc}
+              </p>
+            </motion.div>
           ))}
-        </motion.div>
-      </main>
+        </div>
+      </section>
 
       {/* Footer */}
-      <footer className="w-full border-t border-white/10 py-12 px-6 bg-black/50 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-purple-500" />
-            <span className="font-bold">SiteForge</span>
+      <footer className="border-t border-white/5 py-20 px-6">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
+          <div className="flex items-center gap-3">
+            <Sparkles className="w-6 h-6 text-purple-500" />
+            <span className="font-black uppercase tracking-tighter text-xl">VibeBuilder</span>
           </div>
-          <div className="flex gap-8 text-sm text-gray-500">
+          <div className="flex gap-8 text-sm font-medium text-gray-500">
             <a href="#" className="hover:text-white transition-colors">Privacy</a>
             <a href="#" className="hover:text-white transition-colors">Terms</a>
-            <a href="#" className="hover:text-white transition-colors">Contact</a>
+            <a href="#" className="hover:text-white transition-colors">Twitter</a>
           </div>
-          <p className="text-xs text-gray-600">© 2026 SiteForge. All rights reserved.</p>
+          <p className="text-[10px] text-gray-700 uppercase tracking-[0.3em] font-bold">
+            © 2026 VibeBuilder. All Rights Reserved.
+          </p>
         </div>
       </footer>
     </div>
