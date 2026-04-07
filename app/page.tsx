@@ -1,11 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Sparkles, ArrowRight, Zap, Shield, Globe, Code, Layout, Rocket } from "lucide-react";
+import { Sparkles, ArrowRight, Zap, Shield, Globe, Code, Layout, Rocket, Loader2 } from "lucide-react";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 export default function LandingPage() {
+  const { data: session, status } = useSession();
   return (
     <div className="min-h-screen bg-[#050505] text-white selection:bg-purple-500/30 overflow-x-hidden">
       {/* Navigation */}
@@ -23,18 +24,34 @@ export default function LandingPage() {
           </motion.div>
 
           <div className="flex gap-4 items-center">
-            <button 
-              onClick={() => signIn("google")}
-              className="text-sm font-medium text-gray-400 hover:text-white transition-colors"
-            >
-              Sign In
-            </button>
-            <Link 
-              href="/builder"
-              className="px-6 py-2.5 rounded-full bg-white text-black text-sm font-bold hover:bg-gray-200 transition-all shadow-xl shadow-white/5"
-            >
-              Get Started
-            </Link>
+            {status === "loading" ? (
+               <div className="px-6 py-2.5 rounded-full bg-white/5 border border-white/10 text-xs font-bold text-gray-500 flex items-center gap-2">
+                 <Loader2 className="w-3 h-3 animate-spin" />
+                 Checking...
+               </div>
+            ) : status === "authenticated" ? (
+              <Link 
+                href="/builder"
+                className="px-6 py-2.5 rounded-full bg-white text-black text-sm font-bold hover:bg-gray-200 transition-all shadow-xl shadow-white/5"
+              >
+                Go to Builder
+              </Link>
+            ) : (
+              <>
+                <button 
+                  onClick={() => signIn("google")}
+                  className="text-sm font-medium text-gray-400 hover:text-white transition-colors"
+                >
+                  Sign In
+                </button>
+                <button 
+                  onClick={() => signIn("google")}
+                  className="px-6 py-2.5 rounded-full bg-white text-black text-sm font-bold hover:bg-gray-200 transition-all shadow-xl shadow-white/5"
+                >
+                  Get Started
+                </button>
+              </>
+            )}
           </div>
         </div>
       </nav>
@@ -65,15 +82,32 @@ export default function LandingPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link 
-                href="/builder"
-                className="group relative px-10 py-5 rounded-2xl bg-white text-black font-black uppercase text-sm tracking-widest overflow-hidden transition-all hover:scale-105 active:scale-95"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" />
-                <span className="relative group-hover:text-white transition-colors flex items-center gap-2">
-                  Launch the Builder <ArrowRight className="w-4 h-4" />
-                </span>
-              </Link>
+              {status === "loading" ? (
+                <div className="px-10 py-5 rounded-2xl bg-white/5 border border-white/10 text-gray-500 font-bold text-sm tracking-widest flex items-center gap-3">
+                  <Loader2 className="w-4 h-4 animate-spin text-purple-500" />
+                  Authenticating...
+                </div>
+              ) : status === "authenticated" ? (
+                <Link 
+                  href="/builder"
+                  className="group relative px-10 py-5 rounded-2xl bg-white text-black font-black uppercase text-sm tracking-widest overflow-hidden transition-all hover:scale-105 active:scale-95"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <span className="relative group-hover:text-white transition-colors flex items-center gap-2">
+                    Launch the Builder <ArrowRight className="w-4 h-4" />
+                  </span>
+                </Link>
+              ) : (
+                <button 
+                  onClick={() => signIn("google")}
+                  className="group relative px-10 py-5 rounded-2xl bg-white text-black font-black uppercase text-sm tracking-widest overflow-hidden transition-all hover:scale-105 active:scale-95"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <span className="relative group-hover:text-white transition-colors flex items-center gap-2">
+                    Launch the Builder <ArrowRight className="w-4 h-4" />
+                  </span>
+                </button>
+              )}
               <button className="px-10 py-5 rounded-2xl bg-white/5 border border-white/10 text-white font-bold text-sm tracking-widest hover:bg-white/10 transition-all">
                 View Showcase
               </button>
