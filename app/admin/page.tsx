@@ -11,6 +11,7 @@ import {
   Search, 
   Clock, 
   ShieldCheck,
+  Sparkles,
   User as UserIcon
 } from "lucide-react";
 import Link from "next/link";
