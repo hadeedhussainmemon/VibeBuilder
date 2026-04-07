@@ -5,6 +5,7 @@ const WebsiteSchema = new Schema({
   slug: { type: String, required: true, unique: true },
   title: { type: String, required: true },
   prompt: { type: String, required: true },
+  vibe: { type: String, default: "sleek" },
   html: { type: String, required: true },
   css: { type: String },
   js: { type: String },

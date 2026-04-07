@@ -71,10 +71,11 @@ export default function AdminPage() {
         </header>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
             { icon: Users, label: "Total Users", value: data?.stats?.totalUsers || "0", color: "from-blue-500 to-cyan-500" },
             { icon: Globe, label: "Sites Built", value: data?.stats?.totalSites || "0", color: "from-purple-500 to-pink-500" },
+            { icon: Sparkles, label: "Top Vibe", value: "Glass", color: "from-amber-500 to-orange-500" },
             { icon: Activity, label: "System Health", value: "99.9%", color: "from-emerald-500 to-teal-500" }
           ].map((stat, i) => (
             <div key={i} className="p-1 rounded-[32px] bg-gradient-to-br from-white/10 to-transparent">

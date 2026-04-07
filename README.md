@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 VibeBuilder: Premium AI Website Generator
 
-## Getting Started
+**VibeBuilder** is a high-performance, AI-driven platform that generates stunning, responsive websites in seconds. Built on the cutting edge of Next.js 16 and Groq Llama-3.3, it offers real-time streaming generation and professional design vibes.
 
-First, run the development server:
+## ✨ Features
 
+- **⚡ Instant AI Streaming**: Watch your website code get generated live in the browser.
+- **🎨 Design Vibes**: Choose between **Sleek**, **Glassmorphic**, or **Brutalist** design systems.
+- **📱 Responsive Preview**: Toggle between Desktop and Mobile views instantly.
+- **🖼️ Asset Integration**: Upload logos and integrate them into your designs via Cloudinary.
+- **📦 Code Export**: Copy-paste live code or download a complete ZIP project bundle.
+- **🔒 Secure Auth**: Google Login integration with user-specific sites tracking.
+- **💎 Admin Dashboard**: track all users, site generations, and site analytics.
+
+## 🛠️ Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **Styling**: Tailwind CSS v4 & Framer Motion
+- **AI**: Groq SDK + Vercel AI SDK
+- **Database**: MongoDB (Mongoose)
+- **Auth**: NextAuth.js
+- **Media**: Cloudinary
+
+## 🚀 Getting Started
+
+1. **Clone and Install**:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/hadeedhussainmemon/VibeBuilder.git
+cd VibeBuilder
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Configure Environment**:
+Rename `.env.example` (or create `.env.local`) and add your keys:
+- `GROQ_API_KEY`
+- `MONGODB_URI`
+- `GOOGLE_CLIENT_ID`
+- `GOOGLE_CLIENT_SECRET`
+- `CLOUDINARY_CLOUD_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. **Run Dev**:
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🌍 Deployment
 
-## Learn More
+The easiest way to deploy is with **Vercel**:
+1. Connect your GitHub repository.
+2. Add your environment variables in the Vercel dashboard.
+3. Fix your Google Redirect URI to match your Vercel deployment URL.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+Built with ❤️ by [Hadeed Hussain](https://github.com/hadeedhussainmemon)
