@@ -486,7 +486,7 @@ export default function BuilderPage() {
           </div>
         </header>
 
-        <div className="flex-1 p-10 overflow-hidden flex items-center justify-center relative">
+        <div className="flex-1 p-10 overflow-hidden flex items-center justify-center relative bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-fixed opacity-90">
           <AnimatePresence mode="wait">
             {!generatedHtml && !isGenerating ? (
               <motion.div 
@@ -510,21 +510,46 @@ export default function BuilderPage() {
                 animate={{ 
                   width: device === "desktop" ? "100%" : "375px",
                   height: device === "desktop" ? "100%" : "667px",
+                  maxWidth: device === "desktop" ? "1200px" : "375px"
                 }}
                 transition={{ type: "spring", stiffness: 100, damping: 20 }}
-                className="rounded-[32px] overflow-hidden bg-white shadow-2xl ring-1 ring-white/10 relative group"
+                className="rounded-[32px] overflow-hidden bg-[#0a0a0a] shadow-[0_0_100px_rgba(0,0,0,0.5)] ring-1 ring-white/10 relative group border border-white/5 flex flex-col"
               >
-                {isGenerating && (
-                    <div className="absolute top-4 right-4 z-20 flex items-center gap-2 bg-black/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
-                        <Loader2 className="w-3 h-3 animate-spin text-purple-500" />
-                        <span className="text-[9px] font-black uppercase text-gray-400">AI Streaming...</span>
-                    </div>
-                )}
-                <iframe
-                  srcDoc={generatedHtml}
-                  className="w-full h-full border-none"
-                  title="Site Preview"
-                />
+                {/* Browser Top Bar */}
+                <div className="h-10 px-6 border-b border-white/10 bg-black/60 backdrop-blur-3xl flex items-center gap-4 relative z-20 shrink-0">
+                  <div className="flex gap-2">
+                    <div className="w-2.5 h-2.5 rounded-full bg-red-500/50" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/50" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/50" />
+                  </div>
+                  <div className="flex-1 max-w-sm mx-auto h-6 bg-white/5 rounded-lg border border-white/5 flex items-center px-4">
+                    <p className="text-[10px] text-gray-500 font-mono truncate tracking-tight">{currentSlug ? `vibebuilder.com/${currentSlug}` : 'Generating Visual Identity...'}</p>
+                  </div>
+                  <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="w-4 h-0.5 bg-gray-700 rounded-full" />
+                    <div className="w-4 h-0.5 bg-gray-700 rounded-full" />
+                  </div>
+                </div>
+
+                <div className="flex-1 relative bg-white">
+                  {isGenerating && (
+                      <div className="absolute top-4 right-4 z-20 flex items-center gap-2 bg-black/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 shadow-2xl">
+                          <Loader2 className="w-3 h-3 animate-spin text-purple-500" />
+                          <span className="text-[9px] font-black uppercase text-gray-200 tracking-widest">AI Engine Coding...</span>
+                      </div>
+                  )}
+                  {isRefining && (
+                      <div className="absolute top-4 right-4 z-20 flex items-center gap-2 bg-purple-600/90 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 shadow-2xl">
+                          <Sparkles className="w-3 h-3 animate-pulse text-white" />
+                          <span className="text-[9px] font-black uppercase text-white tracking-widest">Refining Layout...</span>
+                      </div>
+                  )}
+                  <iframe
+                    srcDoc={generatedHtml}
+                    className="w-full h-full border-none"
+                    title="Site Preview"
+                  />
+                </div>
               </motion.div>
             )}
           </AnimatePresence>

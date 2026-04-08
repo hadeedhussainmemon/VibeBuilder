@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     description: "Instant generation of ultra-premium AI websites. Zero code, maximum vibe.",
     url: "https://vibe-builder-seven.vercel.app",
     siteName: "VibeBuilder",
-    images: [{ url: "/logo.png", width: 800, height: 800 }],
+    images: [{ url: "/og-image.png", width: 1200, height: 630 }],
     locale: "en_US",
     type: "website",
   },
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "VibeBuilder | Elite AI Website Generator",
     description: "The world's fastest high-end AI website builder.",
-    images: ["/logo.png"],
+    images: ["/og-image.png"],
   },
 };
 

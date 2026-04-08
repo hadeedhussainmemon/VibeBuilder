@@ -45,14 +45,37 @@ function CommunityShowcase() {
             viewport={{ once: true }}
             className="group relative rounded-[32px] overflow-hidden bg-white/5 border border-white/10 hover:border-purple-500/30 transition-all aspect-[4/3] flex flex-col"
           >
-            <div className="flex-1 bg-gradient-to-br from-purple-500/10 to-blue-500/10 flex items-center justify-center p-8 overflow-hidden relative">
-               <div className="absolute inset-0 opacity-20 group-hover:opacity-40 transition-opacity bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
-               <div className="w-full h-full rounded-2xl border border-white/5 shadow-2xl bg-black/40 backdrop-blur-xl flex flex-col p-6 translate-y-4 group-hover:translate-y-0 transition-transform">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="w-2 h-2 rounded-full bg-red-500" />
-                    <div className="w-2 h-2 rounded-full bg-yellow-500" />
+            <div className="flex-1 bg-gradient-to-br from-[#0c0c0c] to-[#050505] flex items-center justify-center p-8 overflow-hidden relative">
+               <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
+               
+               {/* Mini Mockup Visual */}
+               <div className="w-full h-full rounded-2xl border border-white/10 shadow-2xl bg-black/40 backdrop-blur-3xl flex flex-col p-5 translate-y-6 group-hover:translate-y-2 transition-all duration-700">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex gap-1.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+                    </div>
+                    <div className="w-12 h-1.5 rounded-full bg-white/5" />
                   </div>
-                  <p className="text-[10px] text-gray-400 font-mono italic line-clamp-4">"{site.prompt}"</p>
+                  
+                  {/* Mock Hero */}
+                  <div className="space-y-2 mb-6">
+                    <div className="w-3/4 h-3 rounded-full bg-gradient-to-r from-purple-500/20 to-blue-500/20" />
+                    <div className="w-1/2 h-3 rounded-full bg-gradient-to-r from-purple-500/10 to-transparent" />
+                  </div>
+
+                  {/* Mock Grid */}
+                  <div className="grid grid-cols-2 gap-2 mb-4">
+                    <div className="aspect-video rounded-lg bg-white/5 border border-white/5" />
+                    <div className="aspect-video rounded-lg bg-white/5 border border-white/5" />
+                  </div>
+
+                  {/* Prompt Badge */}
+                  <div className="mt-auto pt-4 border-t border-white/5">
+                    <p className="text-[8px] text-gray-500 font-mono italic truncate bg-white/5 px-2 py-1 rounded-md">
+                      "{site.prompt}"
+                    </p>
+                  </div>
                </div>
             </div>
 
