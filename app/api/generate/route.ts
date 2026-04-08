@@ -10,7 +10,7 @@ export const maxDuration = 60; // Allow 60 seconds for complex generations
 
 export async function POST(req: Request) {
   try {
-    const { prompt, vibe, logoUrl } = await req.json();
+    const { prompt, vibe, logoUrl, contactInfo } = await req.json();
 
     if (!prompt) {
       return new Response("Missing prompt", { status: 400 });
@@ -67,9 +67,10 @@ export async function POST(req: Request) {
       4. Assets: 
          ${logoUrl ? `- LOGO: Use this image URL: "${logoUrl}" prominently in the header (max-h-10).` : "- LOGO: Create a premium text-based logo or use a Sparkles icon."}
          - Images: Use high-quality Unsplash URLs (e.g., https://images.unsplash.com/...) relevant to the topic.
-      5. Mandatory Footer: You MUST include a footer with the text "Made with Vibe Builder" and a link to "https://vibe-builder-seven.vercel.app". Make it look stylish but professional.
-      6. Quality: Use vibrant color palettes, smooth section transitions, and entrance animations (animate__animated animate__fadeInUp).
-      7. Responsive: Ensure it looks stunning on both Mobile (375px) and Desktop (1440px).
+      5. Contact Info: ${contactInfo ? `- MANDATORY: Include this contact information prominently in a 'Contact' or 'About' section: "${contactInfo}"` : "- Use generic contact sections like 'hello@example.com'."}
+      6. Mandatory Footer: You MUST include a footer with the text "Made with Vibe Builder" and a link to "https://vibe-builder-seven.vercel.app". Make it look stylish but professional.
+      7. Quality: Use vibrant color palettes, smooth section transitions, and entrance animations (animate__animated animate__fadeInUp).
+      8. Responsive: Ensure it looks stunning on both Mobile (375px) and Desktop (1440px).
       
       Output ONLY the full HTML code. No pre-amble. No talk.
       

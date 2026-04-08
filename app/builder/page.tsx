@@ -26,6 +26,7 @@ export default function BuilderPage() {
   const [currentSlug, setCurrentSlug] = useState("");
   const [currentId, setCurrentId] = useState("");
   const [showShareTooltip, setShowShareTooltip] = useState(false);
+  const [contactInfo, setContactInfo] = useState("");
   const [refinePrompt, setRefinePrompt] = useState("");
   const [isRefining, setIsRefining] = useState(false);
 
@@ -109,6 +110,20 @@ export default function BuilderPage() {
     saveAs(content, "vibe-builder-project.zip");
   };
 
+  const sanitizeHtml = (html: string) => {
+    // Strip markdown code blocks if they exist
+    let clean = html.trim();
+    if (clean.startsWith('```html')) {
+      clean = clean.replace(/^```html/, '');
+    } else if (clean.startsWith('```')) {
+      clean = clean.replace(/^```/, '');
+    }
+    if (clean.endsWith('```')) {
+      clean = clean.replace(/```$/, '');
+    }
+    return clean;
+  };
+
   const handleGenerate = async () => {
     if (!prompt.trim()) return;
     
@@ -131,6 +146,7 @@ export default function BuilderPage() {
         method: "POST",
         body: JSON.stringify({ 
           prompt, 
+          contactInfo,
           ownerId: session?.user?.id,
           vibe,
           logoUrl 
@@ -159,7 +175,7 @@ export default function BuilderPage() {
             if (line.startsWith('0:')) {
                 const text = JSON.parse(line.substring(2));
                 streamedHtml += text;
-                setGeneratedHtml(streamedHtml);
+                setGeneratedHtml(sanitizeHtml(streamedHtml));
             }
         }
       }
@@ -231,7 +247,7 @@ export default function BuilderPage() {
             if (line.startsWith('0:')) {
                 const text = JSON.parse(line.substring(2));
                 streamedHtml += text;
-                setGeneratedHtml(streamedHtml);
+                setGeneratedHtml(sanitizeHtml(streamedHtml));
             }
         }
       }
@@ -301,6 +317,17 @@ export default function BuilderPage() {
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="Describe your elite vision... (e.g., A luxury dark-themed real estate portal with gold accents, smooth entrance animations, and a high-converting hero section)"
               className="w-full h-40 p-4 rounded-2xl bg-white/5 border border-white/10 focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all outline-none resize-none text-sm placeholder:text-gray-600"
+            />
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <label className="text-xs font-black uppercase tracking-widest text-gray-500">Contact Info (Optional)</label>
+            <input
+              type="text"
+              value={contactInfo}
+              onChange={(e) => setContactInfo(e.target.value)}
+              placeholder="e.g. +92332965814 or hello@example.com"
+              className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500/50 outline-none text-sm placeholder:text-gray-700 transition-all font-medium"
             />
           </div>
 
@@ -457,10 +484,10 @@ export default function BuilderPage() {
                   <div className="relative">
                     <button 
                       onClick={shareSite}
-                      className="p-3 rounded-xl bg-purple-600 text-white hover:bg-purple-700 transition-all shadow-lg shadow-purple-600/20"
-                      title="Share Public Link"
+                      className="flex items-center gap-3 px-6 py-2.5 rounded-xl bg-purple-600 text-white hover:bg-purple-700 transition-all shadow-xl shadow-purple-600/30 font-black uppercase text-[10px] tracking-widest"
                     >
-                      <Send className="w-4 h-4" />
+                      <Send className="w-3.5 h-3.5" />
+                      Share Public Link
                     </button>
                     <AnimatePresence>
                       {showShareTooltip && (
@@ -477,12 +504,6 @@ export default function BuilderPage() {
                   </div>
                 </>
              )}
-             <button 
-               disabled={!generatedHtml}
-               className="px-6 py-2.5 rounded-xl bg-white text-black text-xs font-black uppercase tracking-widest transition-all shadow-2xl shadow-white/5 disabled:opacity-50"
-             >
-                Publish
-             </button>
           </div>
         </header>
 

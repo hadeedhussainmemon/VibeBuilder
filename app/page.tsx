@@ -1,108 +1,34 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, ArrowRight, Zap, Shield, Globe, Code, Layout, Rocket, Loader2 } from "lucide-react";
+import { Sparkles, ArrowRight, Zap, Shield, Code, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
-
-function CommunityShowcase() {
-  const [sites, setSites] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch("/api/websites/showcase")
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data)) {
-          setSites(data);
-        }
-      })
-      .catch(err => console.error("Failed to load showcase", err))
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading) return (
-    <div className="py-20 flex justify-center">
-      <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
-    </div>
-  );
-
-  return (
-    <section id="showcase" className="py-32 px-6 max-w-7xl mx-auto scroll-mt-20">
-      <div className="text-center mb-20 space-y-4">
-        <h2 className="text-4xl md:text-6xl font-black italic uppercase tracking-tighter">Community <span className="text-purple-500">Spotlight</span></h2>
-        <p className="text-gray-500 text-sm font-bold uppercase tracking-widest">Wowed by the vibe? See what others are building in real-time.</p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {sites.map((site, i) => (
-          <motion.div
-            key={site._id}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 }}
-            viewport={{ once: true }}
-            className="group relative rounded-[32px] overflow-hidden bg-white/5 border border-white/10 hover:border-purple-500/30 transition-all aspect-[4/3] flex flex-col"
-          >
-            <div className="flex-1 bg-gradient-to-br from-[#0c0c0c] to-[#050505] flex items-center justify-center p-8 overflow-hidden relative">
-               <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
-               
-               {/* Mini Mockup Visual */}
-               <div className="w-full h-full rounded-2xl border border-white/10 shadow-2xl bg-black/40 backdrop-blur-3xl flex flex-col p-5 translate-y-6 group-hover:translate-y-2 transition-all duration-700">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex gap-1.5">
-                      <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
-                      <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
-                    </div>
-                    <div className="w-12 h-1.5 rounded-full bg-white/5" />
-                  </div>
-                  
-                  {/* Mock Hero */}
-                  <div className="space-y-2 mb-6">
-                    <div className="w-3/4 h-3 rounded-full bg-gradient-to-r from-purple-500/20 to-blue-500/20" />
-                    <div className="w-1/2 h-3 rounded-full bg-gradient-to-r from-purple-500/10 to-transparent" />
-                  </div>
-
-                  {/* Mock Grid */}
-                  <div className="grid grid-cols-2 gap-2 mb-4">
-                    <div className="aspect-video rounded-lg bg-white/5 border border-white/5" />
-                    <div className="aspect-video rounded-lg bg-white/5 border border-white/5" />
-                  </div>
-
-                  {/* Prompt Badge */}
-                  <div className="mt-auto pt-4 border-t border-white/5">
-                    <p className="text-[8px] text-gray-500 font-mono italic truncate bg-white/5 px-2 py-1 rounded-md">
-                      "{site.prompt}"
-                    </p>
-                  </div>
-               </div>
-            </div>
-
-            <div className="p-8 border-t border-white/5 bg-black/50 backdrop-blur-xl flex justify-between items-center">
-              <div>
-                <p className="font-bold text-sm tracking-tight mb-1">{site.slug}</p>
-                <div className="flex items-center gap-2">
-                  <img src={site.ownerId?.image || "/logo.png"} className="w-4 h-4 rounded-full" />
-                  <span className="text-[9px] font-black uppercase tracking-widest text-gray-500">{site.ownerId?.name || "Anonymous"}</span>
-                </div>
-              </div>
-              <Link 
-                href={`/${site.slug}`}
-                className="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center hover:scale-110 transition-transform active:scale-95 shadow-xl shadow-white/10"
-              >
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </section>
-  );
-}
+import ExploreSection from "@/components/ExploreSection";
 
 export default function LandingPage() {
   const { data: session, status } = useSession();
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3
+      }
+    }
+  };
+
+  const itemVariants: any = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut" }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#050505] text-white selection:bg-purple-500/30 overflow-x-hidden scroll-smooth">
       {/* Navigation */}
@@ -116,7 +42,7 @@ export default function LandingPage() {
             <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center border border-white/5 group-hover:scale-110 transition-transform overflow-hidden">
               <img src="/logo.png" alt="VibeBuilder Logo" className="w-full h-full object-cover p-2" />
             </div>
-            <span className="text-2xl font-black tracking-tighter uppercase italic italic">VibeBuilder</span>
+            <span className="text-2xl font-black tracking-tighter uppercase italic">VibeBuilder</span>
           </motion.div>
 
           <div className="flex gap-4 items-center">
@@ -163,26 +89,26 @@ export default function LandingPage() {
         
         <div className="max-w-5xl mx-auto text-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs font-bold text-gray-400 mb-8 tracking-widest uppercase">
+            <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs font-bold text-gray-400 mb-8 tracking-widest uppercase">
               <span className="w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
               Powered by Groq Llama-3.3
-            </div>
+            </motion.div>
 
-            <h1 className="text-6xl md:text-8xl font-black tracking-tight mb-8 bg-gradient-to-b from-white via-white to-white/40 bg-clip-text text-transparent leading-[1.1]">
+            <motion.h1 variants={itemVariants} className="text-6xl md:text-8xl font-black tracking-tight mb-8 bg-gradient-to-b from-white via-white to-white/40 bg-clip-text text-transparent leading-[1.1]">
               Your Vision, <br />
-              <span className="text-purple-500 uppercase italic">Instantly</span> Coded.
-            </h1>
+              <span className="text-purple-500 uppercase italic whitespace-nowrap">Instantly Coded.</span>
+            </motion.h1>
 
-            <p className="text-lg md:text-xl text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
+            <motion.p variants={itemVariants} className="text-lg md:text-xl text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
               Upload your logo, describe your dream site, and watch VibeBuilder generate a stunning, 
               responsive website in seconds. All powered by Groq's lightning-fast AI.
-            </p>
+            </motion.p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               {(status === "loading" ) ? (
                 <div className="px-10 py-5 rounded-2xl bg-white/5 border border-white/10 text-gray-500 font-bold text-sm tracking-widest flex items-center gap-3">
                   <Loader2 className="w-4 h-4 animate-spin text-purple-500" />
@@ -210,22 +136,28 @@ export default function LandingPage() {
                 </button>
               )}
               <a 
-                href="#showcase"
-                className="px-10 py-5 rounded-2xl bg-white/5 border border-white/10 text-white font-bold text-sm tracking-widest hover:bg-white/10 transition-all"
+                href="#explore"
+                className="px-10 py-5 rounded-2xl bg-white/5 border border-white/10 text-white font-bold text-sm tracking-widest hover:bg-white/10 transition-all font-sans"
               >
                 View Showcase
               </a>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
-      {/* Community Showcase */}
-      <CommunityShowcase />
+      {/* Community Discovery */}
+      <ExploreSection />
 
       {/* Feature Grid */}
       <section className="py-32 px-6 max-w-7xl mx-auto">
-        <div className="grid md:grid-cols-3 gap-8">
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={containerVariants}
+          className="grid md:grid-cols-3 gap-8"
+        >
           {[
             {
               icon: <Zap className="w-6 h-6 text-yellow-400" />,
@@ -245,10 +177,7 @@ export default function LandingPage() {
           ].map((feature, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              viewport={{ once: true }}
+              variants={itemVariants}
               className="p-10 rounded-[32px] bg-white/5 border border-white/10 hover:bg-white/[0.07] transition-all group"
             >
               <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-8 border border-white/10 group-hover:scale-110 transition-transform">
@@ -260,25 +189,25 @@ export default function LandingPage() {
               </p>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* Footer */}
       <footer className="border-t border-white/5 py-20 px-6">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10"
+        >
           <div className="flex items-center gap-3">
             <Sparkles className="w-6 h-6 text-purple-500" />
-            <span className="font-black uppercase tracking-tighter text-xl">VibeBuilder</span>
-          </div>
-          <div className="flex gap-8 text-sm font-medium text-gray-500">
-            <a href="#" className="hover:text-white transition-colors">Privacy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms</a>
-            <a href="#" className="hover:text-white transition-colors">Twitter</a>
+            <span className="font-black uppercase tracking-tighter text-xl italic">VibeBuilder</span>
           </div>
           <p className="text-[10px] text-gray-700 uppercase tracking-[0.3em] font-bold">
             © 2026 VibeBuilder. All Rights Reserved.
           </p>
-        </div>
+        </motion.div>
       </footer>
     </div>
   );
