@@ -22,6 +22,9 @@ export default function BuilderPage() {
   const [copied, setCopied] = useState(false);
   const [logoUrl, setLogoUrl] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+  const [history, setHistory] = useState<any[]>([]);
+  const [currentSlug, setCurrentSlug] = useState("");
+  const [showShareTooltip, setShowShareTooltip] = useState(false);
 
   // Streaming Ref
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -29,8 +32,34 @@ export default function BuilderPage() {
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/");
+    } else if (status === "authenticated") {
+      fetchHistory();
     }
   }, [status, router]);
+
+  const fetchHistory = async () => {
+    try {
+      const res = await fetch("/api/websites");
+      const data = await res.json();
+      setHistory(data);
+    } catch (error) {
+      console.error("Failed to fetch history", error);
+    }
+  };
+
+  const loadFromHistory = (site: any) => {
+    setGeneratedHtml(site.html);
+    setVibe(site.vibe || "sleek");
+    setCurrentSlug(site.slug);
+  };
+
+  const shareSite = () => {
+    if (!currentSlug) return;
+    const url = `${window.location.origin}/${currentSlug}`;
+    navigator.clipboard.writeText(url);
+    setShowShareTooltip(true);
+    setTimeout(() => setShowShareTooltip(false), 3000);
+  };
 
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -131,6 +160,9 @@ export default function BuilderPage() {
         }
       }
 
+      // After successful stream, the API should have saved it. Refresh history.
+      fetchHistory();
+
     } catch (error: any) {
       if (error.name !== 'AbortError') {
         console.error("Generation failed", error);
@@ -150,11 +182,11 @@ export default function BuilderPage() {
         animate={{ x: 0, opacity: 1 }}
         className="w-[420px] border-r border-white/5 bg-[#0a0a0a] flex flex-col p-6 overflow-y-auto shrink-0 z-20 shadow-2xl relative"
       >
-        <div className="flex items-center gap-3 mb-10">
-          <div className="p-2 rounded-lg bg-gradient-to-br from-purple-500/20 to-blue-500/20 border border-purple-500/20">
-            <Sparkles className="w-5 h-5 text-purple-400" />
+        <div className="flex items-center gap-4 mb-10 group cursor-pointer">
+          <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 overflow-hidden group-hover:scale-110 transition-all">
+            <img src="/logo.png" className="w-full h-full object-cover p-1" />
           </div>
-          <h2 className="text-xl font-bold tracking-tight">VibeBuilder</h2>
+          <h2 className="text-xl font-black uppercase tracking-tighter italic">VibeBuilder</h2>
         </div>
 
         <div className="flex-1 flex flex-col gap-8">
@@ -190,7 +222,7 @@ export default function BuilderPage() {
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Ex: A luxury dark barbershop with gold accents and a booking button..."
+              placeholder="Describe your elite vision... (e.g., A luxury dark-themed real estate portal with gold accents, smooth entrance animations, and a high-converting hero section)"
               className="w-full h-40 p-4 rounded-2xl bg-white/5 border border-white/10 focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all outline-none resize-none text-sm placeholder:text-gray-600"
             />
           </div>
@@ -240,6 +272,28 @@ export default function BuilderPage() {
               </>
             )}
           </motion.button>
+
+          {/* Recent Creations */}
+          {history.length > 0 && (
+            <div className="flex flex-col gap-4 mt-8 pb-10">
+              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-600">Recent Creations</label>
+              <div className="flex flex-col gap-2">
+                {history.map((site: any) => (
+                  <button
+                    key={site.slug}
+                    onClick={() => loadFromHistory(site)}
+                    className="p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-purple-500/30 transition-all text-left group"
+                  >
+                    <div className="flex justify-between items-center mb-1">
+                      <p className="text-[11px] font-black truncate text-gray-300 group-hover:text-white uppercase tracking-tight">{site.title || site.slug}</p>
+                      <div className="w-1.5 h-1.5 rounded-full bg-purple-500 shrink-0" />
+                    </div>
+                    <p className="text-[9px] text-gray-600 font-bold uppercase tracking-widest">{site.vibe} Vibe</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="mt-auto pt-6 border-t border-white/5 flex items-center gap-4">
@@ -296,6 +350,27 @@ export default function BuilderPage() {
                     <Download className="w-4 h-4" />
                     ZIP Bundle
                   </button>
+                  <div className="relative">
+                    <button 
+                      onClick={shareSite}
+                      className="p-3 rounded-xl bg-purple-600 text-white hover:bg-purple-700 transition-all shadow-lg shadow-purple-600/20"
+                      title="Share Public Link"
+                    >
+                      <Send className="w-4 h-4" />
+                    </button>
+                    <AnimatePresence>
+                      {showShareTooltip && (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                          animate={{ opacity: 1, scale: 1, y: 0 }}
+                          exit={{ opacity: 0, scale: 0.9, y: 10 }}
+                          className="absolute bottom-full right-0 mb-3 px-4 py-2 bg-white text-black text-[10px] font-black uppercase tracking-widest rounded-lg shadow-2xl z-50 whitespace-nowrap"
+                        >
+                          Public Link Copied!
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 </>
              )}
              <button 

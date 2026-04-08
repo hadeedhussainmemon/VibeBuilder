@@ -14,8 +14,12 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "VibeBuilder | AI Website Generator",
-  description: "Generate professional websites instantly with AI.",
+  title: "VibeBuilder | Elite AI Website Generator",
+  description: "Transform your vision into premium, production-ready websites in seconds. Powered by Groq AI.",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({

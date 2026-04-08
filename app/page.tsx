@@ -15,12 +15,12 @@ export default function LandingPage() {
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="flex items-center gap-3 group cursor-pointer"
+            className="flex items-center gap-4 group cursor-pointer"
           >
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
-              <Sparkles className="w-6 h-6 text-white" />
+            <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center border border-white/5 group-hover:scale-110 transition-transform overflow-hidden">
+              <img src="/logo.png" alt="VibeBuilder Logo" className="w-full h-full object-cover p-2" />
             </div>
-            <span className="text-xl font-bold tracking-tight">VibeBuilder</span>
+            <span className="text-2xl font-black tracking-tighter uppercase italic italic">VibeBuilder</span>
           </motion.div>
 
           <div className="flex gap-4 items-center">
