@@ -1,56 +1,81 @@
-# 🚀 VibeBuilder: Premium AI Website Generator
+# 🌌 VibeBuilder Elite: The Autonomous Design Cosmos
 
-**VibeBuilder** is a high-performance, AI-driven platform that generates stunning, responsive websites in seconds. Built on the cutting edge of Next.js 16 and Groq Llama-3.3, it offers real-time streaming generation and professional design vibes.
+**VibeBuilder Elite** is a premium, high-performance AI ecosystem designed to manifest visionary web interfaces in real-time. Powering the transition from text to code through a curated "Vibe" engine, it enables creators to deploy production-stable, visually stunning websites in seconds.
 
-## ✨ Features
+---
 
-- **⚡ Instant AI Streaming**: Watch your website code get generated live in the browser.
-- **🎨 Design Vibes**: Choose between **Sleek**, **Glassmorphic**, or **Brutalist** design systems.
-- **📱 Responsive Preview**: Toggle between Desktop and Mobile views instantly.
-- **🖼️ Asset Integration**: Upload logos and integrate them into your designs via Cloudinary.
-- **📦 Code Export**: Copy-paste live code or download a complete ZIP project bundle.
-- **🔒 Secure Auth**: Google Login integration with user-specific sites tracking.
-- **💎 Admin Dashboard**: track all users, site generations, and site analytics.
+## 💎 Elite Features
 
-## 🛠️ Stack
+### 🎨 The Vibe Engine
+Choose your design consciousness. VibeBuilder doesn't just generate code; it projects a specific visual identity:
+- **Sleek:** Deep, dark, high-performance SaaS aesthetics with neon accents.
+- **Glassmorphism:** Layered depth, high-blur surfaces, and frosty translucency.
+- **Brutalist:** Bold typography, hard-edged grids, and monochromatic raw power.
 
-- **Framework**: Next.js 16 (App Router)
-- **Styling**: Tailwind CSS v4 & Framer Motion
-- **AI**: Groq SDK + Vercel AI SDK
-- **Database**: MongoDB (Mongoose)
-- **Auth**: NextAuth.js
-- **Media**: Cloudinary
+### 🌌 Discovery Cosmos (`/explore`)
+A zero-latency discovery hub featuring **Typographic Essence** previews. Instead of slow iframes, we use high-fidelity meta-cards that visualize every project's core "Vibe Manifesto" through animated gradients and typographic highlights.
 
-## 🚀 Getting Started
+### ⚡ Prompt Library (`/prompts`)
+Skip the blank canvas with our curated library of **20+ High-Demand Prompts**. 
+- **One-Click Deploy:** Instantly launch proven design templates directly into the builder workstation.
+- **Deep-Link Integration:** Auto-configures the builder state for immediate execution.
 
-1. **Clone and Install**:
+### 🛠 Builder Workstation
+A professional-grade creation environment:
+- **Real-Time Streaming:** Watch the AI Engine (Llama-3.3-70B) code your vision live.
+- **Vibe Refinement:** Iterate on your designs with context-aware natural language instructions.
+- **Elite Export:** Download complete ZIP bundles or copy sanitized production-ready code.
+- **Responsive Mastery:** Switch between Desktop and Mobile viewpoints instantly.
+
+---
+
+## 🏗 Technology Stack
+
+- **Framework:** [Next.js 15.1](https://nextjs.org/) (App Router, Turbopack)
+- **AI Core:** [Groq Llama-3.3-70B](https://groq.com/) (Ultra-low latency inference)
+- **Styling:** [Tailwind CSS v4](https://tailwindcss.com/) + [Framer Motion](https://www.framer.com/motion/)
+- **Persistence:** [MongoDB](https://www.mongodb.com/) (Mongoose)
+- **Security:** [NextAuth.js](https://next-auth.js.org/) (Google Identity)
+- **Media:** [Cloudinary](https://cloudinary.com/) (Smart asset management)
+
+---
+
+## 🚀 Deployment & Installation
+
+### 1. Clone & Initialize
 ```bash
 git clone https://github.com/hadeedhussainmemon/VibeBuilder.git
 cd VibeBuilder
 npm install
 ```
 
-2. **Configure Environment**:
-Rename `.env.example` (or create `.env.local`) and add your keys:
-- `GROQ_API_KEY`
-- `MONGODB_URI`
-- `GOOGLE_CLIENT_ID`
-- `GOOGLE_CLIENT_SECRET`
-- `CLOUDINARY_CLOUD_NAME`
-- `CLOUDINARY_API_KEY`
-- `CLOUDINARY_API_SECRET`
+### 2. Environment Configuration
+Create a `.env.local` file with the following keys:
 
-3. **Run Dev**:
+| Variable | Description |
+| :--- | :--- |
+| `GROQ_API_KEY` | Your Groq Cloud API Key |
+| `MONGODB_URI` | MongoDB Connection String |
+| `NEXTAUTH_SECRET` | A secure string for session encryption |
+| `GOOGLE_CLIENT_ID` | Google OAuth Client ID |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth Client Secret |
+| `CLOUDINARY_CLOUD_NAME` | Cloudinary Cloud Name |
+| `CLOUDINARY_API_KEY` | Cloudinary API Key |
+| `CLOUDINARY_API_SECRET` | Cloudinary API Secret |
+| `ADMIN_EMAIL` | The email address granted admin privileges |
+
+### 3. Launch the Cosmos
 ```bash
 npm run dev
 ```
 
-## 🌍 Deployment
+---
 
-The easiest way to deploy is with **Vercel**:
-1. Connect your GitHub repository.
-2. Add your environment variables in the Vercel dashboard.
-3. Fix your Google Redirect URI to match your Vercel deployment URL.
+## 🏁 Final Build Status
+VibeBuilder Elite is production-stable.
+- **Unit Testing:** Passed
+- **Build Verification:** Successful (`Exit code: 0`)
+- **Routing:** Fully Optimized (`/`, `/explore`, `/prompts`, `/builder`)
 
 ---
-Built with ❤️ by [Hadeed Hussain](https://github.com/hadeedhussainmemon)
+**Crafted with Vision by [Hadeed Hussain](https://github.com/hadeedhussainmemon)**
