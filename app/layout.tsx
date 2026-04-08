@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
+import LoadingBridge from "@/components/LoadingBridge";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -44,10 +45,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <body
         className={`${inter.variable} ${outfit.variable} antialiased`}
       >
+        <div className="elite-mesh" />
+        <LoadingBridge />
         <Providers>{children}</Providers>
       </body>
     </html>

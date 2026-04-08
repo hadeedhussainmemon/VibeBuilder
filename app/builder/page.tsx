@@ -29,6 +29,7 @@ export default function BuilderPage() {
   const [contactInfo, setContactInfo] = useState("");
   const [refinePrompt, setRefinePrompt] = useState("");
   const [isRefining, setIsRefining] = useState(false);
+  const [isPublic, setIsPublic] = useState(true);
 
   // Streaming Ref
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -51,11 +52,26 @@ export default function BuilderPage() {
     }
   };
 
+  const handleToggleVisibility = async (val: boolean) => {
+    if (!currentId) return;
+    setIsPublic(val);
+    try {
+      await fetch("/api/websites/toggle-visibility", {
+        method: "POST",
+        body: JSON.stringify({ websiteId: currentId, isPublic: val }),
+      });
+      fetchHistory();
+    } catch (error) {
+      console.error("Failed to toggle visibility", error);
+    }
+  };
+
   const loadFromHistory = (site: any) => {
     setGeneratedHtml(site.html);
     setVibe(site.vibe || "sleek");
     setCurrentSlug(site.slug);
     setCurrentId(site._id);
+    setIsPublic(site.isPublic ?? true);
   };
 
   const shareSite = () => {
@@ -191,6 +207,7 @@ export default function BuilderPage() {
       if (freshData.length > 0) {
         setCurrentId(freshData[0]._id);
         setCurrentSlug(freshData[0].slug);
+        setIsPublic(true); // Default for new gen
       }
 
     } catch (error: any) {
@@ -458,6 +475,26 @@ export default function BuilderPage() {
               </button>
             </div>
             <div className="h-6 w-px bg-white/5" />
+            
+            {currentId && (
+              <div className="flex items-center gap-4">
+                <button 
+                  onClick={() => handleToggleVisibility(!isPublic)}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all ${
+                    isPublic 
+                      ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" 
+                      : "bg-white/5 border-white/10 text-gray-500"
+                  }`}
+                >
+                  <div className={`w-1.5 h-1.5 rounded-full ${isPublic ? "bg-emerald-500 animate-pulse" : "bg-gray-600"}`} />
+                  <span className="text-[10px] font-black uppercase tracking-widest">
+                    {isPublic ? "Public Discovery" : "Private Site"}
+                  </span>
+                </button>
+                <div className="h-6 w-px bg-white/5" />
+              </div>
+            )}
+
             <div className="flex items-center gap-2 text-[10px] font-black tracking-widest text-gray-500 uppercase">
               <Globe className="w-3 h-3 text-purple-500" />
               Live Preview
@@ -520,7 +557,7 @@ export default function BuilderPage() {
                 <div className="w-24 h-24 rounded-[40px] bg-gradient-to-br from-purple-500/10 to-blue-500/10 flex items-center justify-center mx-auto mb-10 border border-white/5 shadow-2xl">
                   <Layout className="w-10 h-10 text-gray-600" />
                 </div>
-                <h3 className="text-3xl font-black mb-4 tracking-tight uppercase italic italic">Empty Canvas</h3>
+                <h3 className="text-3xl font-black mb-4 tracking-tight uppercase italic">Empty Canvas</h3>
                 <p className="text-gray-500 leading-relaxed text-sm">
                   Your AI-generated website will stream right here. Describe your vision to begin.
                 </p>

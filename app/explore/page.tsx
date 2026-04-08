@@ -21,7 +21,7 @@ export default function ExplorePage() {
             <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center border border-white/5 group-hover:scale-110 transition-transform overflow-hidden">
               <img src="/logo.png" alt="VibeBuilder Logo" className="w-full h-full object-cover p-2" />
             </div>
-            <span className="text-2xl font-black tracking-tighter uppercase italic italic">VibeBuilder</span>
+            <span className="text-2xl font-black tracking-tighter uppercase italic">VibeBuilder</span>
           </Link>
 
           <div className="flex gap-4 items-center">
@@ -60,7 +60,7 @@ export default function ExplorePage() {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
           <div className="flex items-center gap-3">
             <Sparkles className="w-6 h-6 text-purple-500" />
-            <span className="font-black uppercase tracking-tighter text-xl">VibeBuilder</span>
+            <span className="font-black uppercase tracking-tighter text-xl italic">VibeBuilder</span>
           </div>
           <p className="text-[10px] text-gray-700 uppercase tracking-[0.3em] font-bold">
             © 2026 VibeBuilder. All Rights Reserved.

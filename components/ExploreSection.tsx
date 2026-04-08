@@ -86,32 +86,35 @@ export default function ExploreSection() {
           >
             <div className="aspect-[4/5] bg-gradient-to-br from-[#0c0c0c] to-[#050505] flex items-center justify-center p-6 overflow-hidden relative">
                <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
-               
-               <div className="w-full h-full rounded-2xl border border-white/10 shadow-2xl bg-black/40 backdrop-blur-3xl flex flex-col p-5 translate-y-12 group-hover:translate-y-4 transition-all duration-700">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex gap-1.5">
-                      <div className="w-1.5 h-1.5 rounded-full bg-red-500" />
-                      <div className="w-1.5 h-1.5 rounded-full bg-yellow-500" />
-                    </div>
-                    <div className="w-12 h-1.5 rounded-full bg-white/5" />
+                              <div className="w-full h-full rounded-2xl border border-white/10 shadow-2xl bg-black/40 backdrop-blur-3xl flex flex-col translate-y-12 group-hover:translate-y-4 transition-all duration-700 overflow-hidden relative pointer-events-none">
+                  {/* Browser Top Bar */}
+                  <div className="h-4 px-3 border-b border-white/10 bg-black/60 backdrop-blur-3xl flex items-center gap-1.5 relative z-10 shrink-0">
+                    <div className="w-1.5 h-1.5 rounded-full bg-red-500/50" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-yellow-500/50" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/50" />
                   </div>
                   
-                  <div className="space-y-2 mb-8">
-                    <div className="w-3/4 h-3 rounded-full bg-gradient-to-r from-purple-500/30 to-blue-500/30" />
-                    <div className="w-1/2 h-3 rounded-full bg-white/5" />
+                  {/* Live Iframe Preview */}
+                  <div className="flex-1 bg-white relative">
+                    <iframe 
+                      src={`/${site.slug}`}
+                      className="absolute top-0 left-0 w-[1200px] h-[1500px] origin-top-left scale-[0.25] md:scale-[0.22] lg:scale-[0.2] xl:scale-[0.22] border-none"
+                      loading="lazy"
+                      title={site.title}
+                    />
+                    
+                    {/* Subtle Overlay to make it feel like a preview */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3 mb-6">
-                    <div className="aspect-square rounded-xl bg-white/5 border border-white/5" />
-                    <div className="aspect-square rounded-xl bg-white/5 border border-white/5" />
+                  {/* Vibe Badge */}
+                  <div className="absolute bottom-4 left-4 right-4 z-10">
+                     <div className="bg-black/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10 inline-flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
+                        <span className="text-[8px] font-black uppercase tracking-widest text-gray-300">{site.vibe || 'sleek'} vibe</span>
+                     </div>
                   </div>
-
-                  <div className="mt-auto pt-5 border-t border-white/5">
-                    <p className="text-[9px] text-gray-500 font-mono italic line-clamp-2 bg-white/5 px-3 py-2 rounded-xl leading-relaxed">
-                      "{site.prompt}"
-                    </p>
-                  </div>
-               </div>
+                </div>
             </div>
 
             <div className="p-8 bg-black/50 backdrop-blur-xl flex flex-col gap-6 mt-auto">
