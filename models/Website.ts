@@ -10,6 +10,8 @@ const WebsiteSchema = new Schema({
   css: { type: String },
   js: { type: String },
   assets: [{ url: String, type: String }],
+  isPublic: { type: Boolean, default: true },
+  isFeatured: { type: Boolean, default: false },
 }, { timestamps: true });
 
 const Website = models.Website || model("Website", WebsiteSchema);

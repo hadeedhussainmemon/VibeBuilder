@@ -3,16 +3,25 @@ import { streamText } from "ai";
 import connectToDatabase from "@/lib/db";
 import User from "@/models/User";
 import Website from "@/models/Website";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export const maxDuration = 60; // Allow 60 seconds for complex generations
 
 export async function POST(req: Request) {
   try {
-    const { prompt, ownerId, vibe, logoUrl } = await req.json();
+    const { prompt, vibe, logoUrl } = await req.json();
 
-    if (!prompt || !ownerId) {
-      return new Response("Missing prompt or ownerId", { status: 400 });
+    if (!prompt) {
+      return new Response("Missing prompt", { status: 400 });
     }
+
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
+    const ownerId = session.user.id;
 
     await connectToDatabase();
     const user = await User.findById(ownerId);
@@ -20,8 +29,8 @@ export async function POST(req: Request) {
       return new Response("User not found", { status: 404 });
     }
 
-    // Check Limit
-    if (!user.isPremium && user.sitesCount >= 5) {
+    // Check Limit against dynamic maxSites
+    if (user.sitesCount >= (user.maxSites || 5)) {
       return new Response(JSON.stringify({ status: "LIMIT_REACHED" }), {
         status: 403,
         headers: { "Content-Type": "application/json" },

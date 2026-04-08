@@ -15,10 +15,26 @@ const outfit = Outfit({
 
 export const metadata: Metadata = {
   title: "VibeBuilder | Elite AI Website Generator",
-  description: "Transform your vision into premium, production-ready websites in seconds. Powered by Groq AI.",
+  description: "Transform your vision into premium, production-ready websites in seconds. Powered by Groq Llama-3.3 AI.",
+  metadataBase: new URL("https://vibe-builder-seven.vercel.app"),
   icons: {
     icon: "/logo.png",
     apple: "/logo.png",
+  },
+  openGraph: {
+    title: "VibeBuilder | Elite AI Website Generator",
+    description: "Instant generation of ultra-premium AI websites. Zero code, maximum vibe.",
+    url: "https://vibe-builder-seven.vercel.app",
+    siteName: "VibeBuilder",
+    images: [{ url: "/logo.png", width: 800, height: 800 }],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "VibeBuilder | Elite AI Website Generator",
+    description: "The world's fastest high-end AI website builder.",
+    images: ["/logo.png"],
   },
 };
 

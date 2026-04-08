@@ -20,6 +20,7 @@ export const authOptions = {
           session.user.id = dbUser._id;
           session.user.role = dbUser.role;
           session.user.sitesCount = dbUser.sitesCount;
+          session.user.maxSites = dbUser.maxSites || 5;
           session.user.isPremium = dbUser.isPremium;
         }
       }

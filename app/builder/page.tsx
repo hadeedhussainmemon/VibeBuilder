@@ -24,7 +24,10 @@ export default function BuilderPage() {
   const [isUploading, setIsUploading] = useState(false);
   const [history, setHistory] = useState<any[]>([]);
   const [currentSlug, setCurrentSlug] = useState("");
+  const [currentId, setCurrentId] = useState("");
   const [showShareTooltip, setShowShareTooltip] = useState(false);
+  const [refinePrompt, setRefinePrompt] = useState("");
+  const [isRefining, setIsRefining] = useState(false);
 
   // Streaming Ref
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -51,6 +54,7 @@ export default function BuilderPage() {
     setGeneratedHtml(site.html);
     setVibe(site.vibe || "sleek");
     setCurrentSlug(site.slug);
+    setCurrentId(site._id);
   };
 
   const shareSite = () => {
@@ -109,13 +113,14 @@ export default function BuilderPage() {
     if (!prompt.trim()) return;
     
     // Check limit first
-    if (session?.user && !session.user.isPremium && session.user.sitesCount >= 5) {
+    if (session?.user && session.user.sitesCount >= (session.user.maxSites || 5)) {
       setShowLimitModal(true);
       return;
     }
 
     setIsGenerating(true);
     setGeneratedHtml(""); // Clear previous
+    setCurrentId(""); // Reset ID for new gen
     
     // Abort previous stream if any
     if (abortControllerRef.current) abortControllerRef.current.abort();
@@ -149,7 +154,6 @@ export default function BuilderPage() {
         if (done) break;
         
         const chunk = decoder.decode(value);
-        // The AI SDK sends data in a specific format (e.g., 0:"text"), we extract the text part
         const lines = chunk.split("\n").filter(line => line.trim() !== "");
         for (const line of lines) {
             if (line.startsWith('0:')) {
@@ -160,8 +164,18 @@ export default function BuilderPage() {
         }
       }
 
-      // After successful stream, the API should have saved it. Refresh history.
       fetchHistory();
+
+      // After generation, we don't have the ID immediately from the stream. 
+      // The history fetch will eventually give us the latest ID, 
+      // but for refinement we'll need to load it or wait for history.
+      // Optimization: The history API returns sorted, so data[0] is our new site.
+      const freshHistoryResponse = await fetch("/api/websites");
+      const freshData = await freshHistoryResponse.json();
+      if (freshData.length > 0) {
+        setCurrentId(freshData[0]._id);
+        setCurrentSlug(freshData[0].slug);
+      }
 
     } catch (error: any) {
       if (error.name !== 'AbortError') {
@@ -169,6 +183,67 @@ export default function BuilderPage() {
       }
     } finally {
       setIsGenerating(false);
+    }
+  };
+
+  const handleRefine = async () => {
+    if (!refinePrompt.trim() || !currentId) return;
+
+    // Check limit
+    if (session?.user && session.user.sitesCount >= (session.user.maxSites || 5)) {
+      setShowLimitModal(true);
+      return;
+    }
+
+    setIsRefining(true);
+    
+    if (abortControllerRef.current) abortControllerRef.current.abort();
+    abortControllerRef.current = new AbortController();
+
+    try {
+      const response = await fetch("/api/generate/refine", {
+        method: "POST",
+        body: JSON.stringify({ 
+          websiteId: currentId,
+          instruction: refinePrompt
+        }),
+        signal: abortControllerRef.current.signal,
+      });
+
+      if (response.status === 403) {
+        setShowLimitModal(true);
+        return;
+      }
+
+      if (!response.body) return;
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let streamedHtml = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        
+        const chunk = decoder.decode(value);
+        const lines = chunk.split("\n").filter(line => line.trim() !== "");
+        for (const line of lines) {
+            if (line.startsWith('0:')) {
+                const text = JSON.parse(line.substring(2));
+                streamedHtml += text;
+                setGeneratedHtml(streamedHtml);
+            }
+        }
+      }
+
+      setRefinePrompt(""); // Clear after success
+      fetchHistory();
+    } catch (error: any) {
+      if (error.name !== 'AbortError') {
+        console.error("Refinement failed", error);
+      }
+    } finally {
+      setIsRefining(false);
     }
   };
 
@@ -217,7 +292,9 @@ export default function BuilderPage() {
           <div className="flex flex-col gap-3">
             <label className="text-xs font-black uppercase tracking-widest text-gray-500 flex justify-between">
               Your Vision
-              <span className="bg-purple-500/10 px-2 py-0.5 rounded text-purple-400 border border-purple-500/10">Free: {5 - (session?.user?.sitesCount || 0)} left</span>
+              <span className="bg-purple-500/10 px-2 py-0.5 rounded text-purple-400 border border-purple-500/10">
+                 Quota: {Math.max(0, (session?.user?.maxSites || 5) - (session?.user?.sitesCount || 0))} left
+              </span>
             </label>
             <textarea
               value={prompt}
@@ -256,9 +333,9 @@ export default function BuilderPage() {
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            disabled={isGenerating || !prompt}
+            disabled={isGenerating || isRefining || !prompt}
             onClick={handleGenerate}
-            className="w-full py-4 rounded-2xl bg-gradient-to-r from-purple-600 to-blue-600 text-white font-black uppercase text-sm tracking-widest flex items-center justify-center gap-3 group disabled:opacity-50 disabled:grayscale cursor-pointer shadow-lg shadow-purple-600/10"
+            className="w-full py-4 rounded-2xl bg-white text-black font-black uppercase text-sm tracking-widest flex items-center justify-center gap-3 group disabled:opacity-50 disabled:grayscale cursor-pointer shadow-lg shadow-white/10"
           >
             {isGenerating ? (
               <>
@@ -267,11 +344,38 @@ export default function BuilderPage() {
               </>
             ) : (
               <>
-                <Sparkles className="w-5 h-5" />
-                <span>Build Website</span>
+                <Plus className="w-5 h-5" />
+                <span>New Project</span>
               </>
             )}
           </motion.button>
+
+          {/* Refine Section */}
+          <AnimatePresence>
+            {generatedHtml && (
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex flex-col gap-3 p-4 rounded-[28px] bg-gradient-to-b from-purple-500/10 to-transparent border border-purple-500/20"
+              >
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-purple-400 mb-1">Refine this Design</label>
+                <textarea
+                  value={refinePrompt}
+                  onChange={(e) => setRefinePrompt(e.target.value)}
+                  placeholder="Ask to change colors, add sections, fixed layouts..."
+                  className="w-full h-24 bg-transparent text-sm outline-none resize-none placeholder:text-gray-700 font-medium"
+                />
+                <button 
+                  disabled={isRefining || isGenerating || !refinePrompt}
+                  onClick={handleRefine}
+                  className="w-full py-3 rounded-xl bg-purple-600 text-white text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-purple-500 transition-colors disabled:opacity-30 shadow-lg shadow-purple-600/20"
+                >
+                  {isRefining ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
+                  {isRefining ? 'Refining...' : 'Apply Vibe'}
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Recent Creations */}
           {history.length > 0 && (
@@ -439,14 +543,20 @@ export default function BuilderPage() {
              <div className="w-24 h-24 rounded-[40px] bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mx-auto mb-10 shadow-lg">
                 <Shield className="w-12 h-12 text-purple-400" />
              </div>
-             <h2 className="text-4xl font-black mb-4 uppercase italic">Frozen</h2>
+             <h2 className="text-4xl font-black mb-4 uppercase italic tracking-tighter">Frozen</h2>
              <p className="text-gray-500 mb-12 leading-relaxed text-sm font-medium">
-                You've hit the 5-site limit. Upgrade to unlock unlimited generations and premium vibes.
+                You've reached your generation limit. Please contact the administrator on WhatsApp to unfreeze your account and add more site credits.
              </p>
              <div className="flex flex-col gap-4">
-                <button className="w-full py-5 rounded-[24px] bg-white text-black font-black uppercase text-sm tracking-widest hover:scale-[1.02] active:scale-95 transition-transform shadow-xl shadow-white/10">
-                   Get Premium - $10
-                </button>
+                <a 
+                  href="https://wa.me/92332965814?text=I%20want%20to%20unfreeze%20my%20VibeBuilder%20account"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-5 rounded-[24px] bg-emerald-500 text-white font-black uppercase text-sm tracking-widest hover:scale-[1.02] active:scale-95 transition-transform shadow-xl shadow-emerald-500/20 flex items-center justify-center gap-3"
+                >
+                   <Send className="w-5 h-5" />
+                   Message +92332965814
+                </a>
                 <button 
                   onClick={() => setShowLimitModal(false)}
                   className="w-full py-5 rounded-[24px] bg-white/5 border border-white/10 text-gray-600 font-black uppercase text-[10px] tracking-[0.2em] hover:bg-white/10 transition-all outline-none"
