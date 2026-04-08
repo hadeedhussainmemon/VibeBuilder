@@ -1,16 +1,25 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { Sparkles, Layout, Globe, Code, Download, Send, Plus, Upload, Loader2, Maximize2, Trash2, Shield, Check, Copy, Smartphone, Monitor } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 
 export default function BuilderPage() {
+  return (
+    <Suspense fallback={<div className="h-screen w-screen flex items-center justify-center bg-black"><Loader2 className="w-10 h-10 animate-spin text-purple-500" /></div>}>
+      <BuilderContent />
+    </Suspense>
+  );
+}
+
+function BuilderContent() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
   
   // App States
   const [prompt, setPrompt] = useState("");
@@ -33,6 +42,14 @@ export default function BuilderPage() {
 
   // Streaming Ref
   const abortControllerRef = useRef<AbortController | null>(null);
+
+  // Handle Deep-Links from /prompts
+  useEffect(() => {
+    const p = searchParams.get("prompt");
+    const v = searchParams.get("vibe");
+    if (p) setPrompt(decodeURIComponent(p));
+    if (v) setVibe(v);
+  }, [searchParams]);
 
   useEffect(() => {
     if (status === "unauthenticated") {

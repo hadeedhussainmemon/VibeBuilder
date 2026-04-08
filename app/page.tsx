@@ -47,7 +47,10 @@ export default function LandingPage() {
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex gap-4 items-center">
+          <div className="hidden md:flex gap-8 items-center">
+            <Link href="/explore" className="text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-white transition-colors">Galaxy</Link>
+            <Link href="/prompts" className="text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-white transition-colors">Prompts</Link>
+            <div className="h-4 w-px bg-white/10" />
             {status === "loading" ? (
                <div className="px-6 py-2.5 rounded-full bg-white/5 border border-white/10 text-xs font-bold text-gray-500 flex items-center gap-2">
                  <Loader2 className="w-3 h-3 animate-spin" />
@@ -57,7 +60,7 @@ export default function LandingPage() {
               <div className="flex items-center gap-4">
                 <Link 
                   href="/builder"
-                  className="px-6 py-2.5 rounded-full bg-white text-black text-sm font-bold hover:bg-gray-200 transition-all shadow-xl shadow-white/5"
+                  className="px-6 py-2.5 rounded-full bg-white text-black text-xs font-black uppercase tracking-widest hover:bg-gray-200 transition-all shadow-xl shadow-white/5"
                 >
                   Go to Builder
                 </Link>
@@ -66,13 +69,13 @@ export default function LandingPage() {
               <>
                 <button 
                   onClick={() => signIn("google")}
-                  className="text-sm font-medium text-gray-400 hover:text-white transition-colors"
+                  className="text-xs font-black uppercase tracking-widest text-gray-500 hover:text-white transition-colors"
                 >
                   Sign In
                 </button>
                 <button 
                   onClick={() => signIn("google")}
-                  className="px-6 py-2.5 rounded-full bg-white text-black text-sm font-bold hover:bg-gray-200 transition-all shadow-xl shadow-white/5"
+                  className="px-6 py-2.5 rounded-full bg-white text-black text-xs font-black uppercase tracking-widest hover:bg-gray-200 transition-all shadow-xl shadow-white/5"
                 >
                   Get Started
                 </button>
@@ -207,7 +210,7 @@ export default function LandingPage() {
       </section>
 
       {/* Community Discovery */}
-      <ExploreSection />
+      <ExploreSection limit={4} />
 
       {/* Feature Grid */}
       <section className="py-32 px-6 max-w-7xl mx-auto">

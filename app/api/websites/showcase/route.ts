@@ -2,15 +2,18 @@ import { NextResponse } from "next/server";
 import connectToDatabase from "@/lib/db";
 import Website from "@/models/Website";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const limit = parseInt(searchParams.get("limit") || "12");
+
     await connectToDatabase();
     
-    // Fetch latest 6 websites that are public
+    // Fetch latest websites that are public
     const showcase = await Website.find({ isPublic: true })
       .populate("ownerId", "name image")
       .sort({ createdAt: -1 })
-      .limit(6);
+      .limit(limit);
 
     return NextResponse.json(showcase);
   } catch (error) {

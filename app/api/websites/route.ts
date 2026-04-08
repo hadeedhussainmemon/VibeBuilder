@@ -16,7 +16,7 @@ export async function GET() {
     const websites = await Website.find({ ownerId: session.user.id })
       .sort({ createdAt: -1 })
       .limit(5)
-      .select("slug title vibe createdAt html");
+      .select("slug title vibe createdAt html isPublic");
 
     return new Response(JSON.stringify(websites), {
       headers: { "Content-Type": "application/json" },

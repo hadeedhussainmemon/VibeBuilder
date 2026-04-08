@@ -24,7 +24,10 @@ export default function ExplorePage() {
             <span className="text-2xl font-black tracking-tighter uppercase italic">VibeBuilder</span>
           </Link>
 
-          <div className="flex gap-4 items-center">
+          <div className="flex gap-8 items-center">
+            <Link href="/explore" className="text-[10px] font-black uppercase tracking-widest text-white border-b border-purple-500 pb-1">Galaxy</Link>
+            <Link href="/prompts" className="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-white transition-colors">Prompts</Link>
+            <div className="h-4 w-px bg-white/10" />
             {status === "loading" ? (
                <div className="px-6 py-2.5 rounded-full bg-white/5 border border-white/10 text-xs font-bold text-gray-500 flex items-center gap-2">
                  <Loader2 className="w-3 h-3 animate-spin" />
@@ -34,7 +37,7 @@ export default function ExplorePage() {
               <div className="flex items-center gap-4">
                 <Link 
                   href="/builder"
-                  className="px-6 py-2.5 rounded-full bg-white text-black text-sm font-bold hover:bg-gray-200 transition-all shadow-xl shadow-white/5"
+                  className="px-6 py-2.5 rounded-full bg-white text-black text-[10px] font-black uppercase tracking-widest hover:bg-gray-200 transition-all shadow-xl shadow-white/5"
                 >
                   Launch Builder
                 </Link>
@@ -42,7 +45,7 @@ export default function ExplorePage() {
             ) : (
               <button 
                 onClick={() => signIn("google")}
-                className="px-6 py-2.5 rounded-full bg-white text-black text-sm font-bold hover:bg-gray-200 transition-all shadow-xl shadow-white/5"
+                className="px-6 py-2.5 rounded-full bg-white text-black text-[10px] font-black uppercase tracking-widest hover:bg-gray-200 transition-all shadow-xl shadow-white/5"
               >
                 Get Started
               </button>
